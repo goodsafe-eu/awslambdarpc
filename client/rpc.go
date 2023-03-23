@@ -16,8 +16,8 @@ import (
 // to the lambda function as body.
 // If the lambda returned an error then this function will return
 // the error message in the error interface
-func Invoke(addr string, data []byte) ([]byte, error) {
-	t := time.Now().Add(15 * time.Second)
+func Invoke(addr string, data []byte, deadLineSeconds int64) ([]byte, error) {
+	t := time.Now().Add(time.Duration(deadLineSeconds) * time.Second)
 	deadline := &messages.InvokeRequest_Timestamp{
 		Seconds: int64(t.Unix()),
 		Nanos:   int64(t.Nanosecond()),
