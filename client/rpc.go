@@ -5,6 +5,7 @@ package client
 import (
 	"fmt"
 	"net/rpc"
+	"time"
 
 	"github.com/aws/aws-lambda-go/lambda/messages"
 )
@@ -16,7 +17,12 @@ import (
 // If the lambda returned an error then this function will return
 // the error message in the error interface
 func Invoke(addr string, data []byte) ([]byte, error) {
-	request := messages.InvokeRequest{Payload: data}
+	t := time.Now().Add(15 * time.Second)
+	deadline := &messages.InvokeRequest_Timestamp{
+		Seconds: int64(t.Unix()),
+		Nanos:   int64(t.Nanosecond()),
+	}
+	request := messages.InvokeRequest{Payload: data, Deadline: *deadline}
 	client, err := rpc.Dial("tcp", addr)
 	if err != nil {
 		return nil, err
