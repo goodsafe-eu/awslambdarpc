@@ -47,6 +47,8 @@ Available options:
   --event	path to the event JSON to be used as input
   -d
   --data	data passed to the function as input, in JSON format, defaults to "{}"
+  -dl
+  --deadline
   help
   -h
   --help	show this help
