@@ -34,6 +34,8 @@ You can do passing the data directly with the -d flag:
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -125,5 +127,12 @@ func main() {
 		os.Stderr.WriteString(err.Error() + "\n")
 		os.Exit(-2)
 	}
-	println(string(res))
+	rawJsonStr := string(res)
+	var prettyJSON bytes.Buffer
+	if err := json.Indent(&prettyJSON, []byte(rawJsonStr), "", "    "); err != nil {
+		println(err)
+	} else {
+		println(prettyJSON.String())
+	}
+
 }
