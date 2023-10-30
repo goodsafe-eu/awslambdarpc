@@ -128,11 +128,28 @@ func main() {
 		os.Exit(-2)
 	}
 	rawJsonStr := string(res)
+
 	var prettyJSON bytes.Buffer
 	if err := json.Indent(&prettyJSON, []byte(rawJsonStr), "", "    "); err != nil {
 		println(err)
 	} else {
-		println(prettyJSON.String())
+		jsonData := map[string]interface{}{}
+		if err := json.Unmarshal([]byte(rawJsonStr), &jsonData); err != nil {
+			println(err)
+			return
+		}
+
+		fmt.Printf("Status code: %+v\n", jsonData["statusCode"])
+
+		// Check if the "body" field exists and is a JSON string
+		if bodyStr, ok := jsonData["body"].(string); ok {
+			var prettyBodyJSON bytes.Buffer
+			if err := json.Indent(&prettyBodyJSON, []byte(bodyStr), "", "    "); err != nil {
+				println(err)
+			} else {
+				println(prettyBodyJSON.String())
+			}
+		}
 	}
 
 }
